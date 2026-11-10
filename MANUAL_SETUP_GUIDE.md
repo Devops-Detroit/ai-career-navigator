@@ -48,10 +48,11 @@ This guide walks you through building and deploying the whole app **by hand in t
 ## Part 1 — Try the model in the Bedrock playground (5 min)
 
 1. In the console search bar, type **Bedrock** and open **Amazon Bedrock**.
-2. **Check model access** (one time per account):
-   - Left menu → **Model access** (sometimes under *Bedrock configurations*).
-   - Find **Amazon → Nova Pro**. If it says **Access granted**, continue. If not, click **Modify model access** (or **Enable specific models**), tick **Nova Pro** (and **Nova Lite** if you want to compare), then **Next → Submit**. Amazon models are usually granted instantly.
-   - *In many accounts, Amazon models are enabled by default and this page just confirms it.*
+2. **Confirm the model is available** (no enabling needed):
+   - Bedrock now turns on all serverless models automatically, so there is **no "Model access" page** and nothing to request. (If you see older tutorials mentioning it, skip that step.)
+   - Left menu → **Model catalog** → search **Nova Pro**. If it shows up with your region (`us-east-1`) selected, it's available.
+   - Whether *you* can call it is controlled by IAM permissions. The quickest check is the playground in the next step: if it responds, you're all set. If you get `AccessDeniedException`, your user or role (or an organization policy) is blocking Bedrock.
+   - *Anthropic (Claude) models still need a one-time use-case form, and some AWS Marketplace models need a subscription. Amazon Nova models need neither.*
 3. Left menu → **Playgrounds → Chat / Text**.
 4. Click **Select model** → **Amazon** → **Nova Pro** → **Apply**.
 5. Paste this prompt and click **Run**:
@@ -229,7 +230,7 @@ API Gateway → `career-navigator-api` → left menu **Protect → Throttling** 
 | What you see | Fix |
 |---|---|
 | Lambda test: `Task timed out after 3.00 seconds` | Part 2c: set the timeout to 30 seconds. |
-| `AccessDeniedException` | The Lambda role is missing the Bedrock policy (Part 2d), **or** Nova model access isn't granted in this region (Part 1, step 2). |
+| `AccessDeniedException` | The Lambda role is missing the Bedrock policy (Part 2d), **or** an IAM/organization (SCP) policy is denying Bedrock. Models no longer need to be enabled, so it's almost always permissions. |
 | `ValidationException ... on-demand throughput isn't supported` | Use the model ID **with** the geography prefix: `us.amazon.nova-pro-v1:0` (or `eu.` / `apac.`). |
 | `Bedrock call failed` in the response | Open Lambda → **Monitor** → **View CloudWatch logs** → newest log stream to see the real error. |
 | Browser: *"Something went wrong: Failed to fetch"* | CORS isn't configured (Part 3, step 6), or the URL in `app.js` is wrong. Press F12 → Console to see the error. |
