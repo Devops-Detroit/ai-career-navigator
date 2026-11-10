@@ -200,9 +200,35 @@ This guide walks you through building and deploying the whole app **by hand in t
 
 ## Part 5 — Deploy the website with AWS Amplify (5 min)
 
-1. **Make a zip of the frontend files.** The files must be at the *root* of the zip, not inside a folder:
-   - **Windows:** open the `frontend` folder → select `index.html`, `style.css`, `app.js` → right-click → **Send to → Compressed (zipped) folder**.
+1. **Make a zip of the frontend files.** First make sure `app.js` has your API URL (Part 4). The files must be at the *root* of the zip, not inside a folder. Pick **one** way:
+
+   **Manual (point and click)**
+   - **Windows:** open the `frontend` folder → select `index.html`, `style.css`, `app.js` → right-click → **Send to → Compressed (zipped) folder** (on Windows 11: right-click → **Compress to → ZIP File**).
    - **Mac:** open the `frontend` folder → select the 3 files → right-click → **Compress 3 Items**.
+   - **Linux (Ubuntu Files app):** open the `frontend` folder → select the 3 files → right-click → **Compress…** → choose **.zip** → **Create**.
+
+   **Command line** (run from the project's top folder, `ai-career-navigator`)
+   - **Windows (PowerShell):**
+
+     ```powershell
+     cd frontend
+     Compress-Archive -Path index.html, style.css, app.js -DestinationPath ..\career-navigator-site.zip -Force
+     cd ..
+     ```
+
+   - **Mac / Linux (Terminal):**
+
+     ```bash
+     cd frontend
+     zip ../career-navigator-site.zip index.html style.css app.js
+     cd ..
+     ```
+
+     *Linux says `zip: command not found`? Install it with `sudo apt install zip` (Ubuntu/Debian) or `sudo dnf install zip` (Fedora).*
+
+   This creates `career-navigator-site.zip` next to the `frontend` folder.
+
+   **Check it:** open the zip. You should see the 3 files right away, with no `frontend` folder inside. To check from the command line, run `unzip -l career-navigator-site.zip` (Mac/Linux) or `tar -tf career-navigator-site.zip` (Windows).
    - ❌ Don't zip the `frontend` folder itself. Amplify would then show a blank page or a 404.
 2. Search for **AWS Amplify** → open it → **Create new app** (or **Deploy an app**).
 3. Choose **Deploy without Git** → **Next**.
